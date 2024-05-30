@@ -1,0 +1,31 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+      - id: servicio-productos
+        uri: lb://servicio-productos
+        predicates:
+          - Path=/api/productos/**
+          #- Header=token, \d+
+          #- Header=Content-Type,application/json
+          #- Method=GET, POST
+          #- Query=color
+          #- Cookie=color, azul
+        filters:
+          - StripPrefix=2
+          - EjemploCookie=Hola mi mensjae personalizado, usuario, AndresGuzman
+          #- name: Ejemplo 
+            #args:
+            #  mensaje: Hola mi mensjae personalizado
+            #  cookieNombre: usuario
+            #  cookieValor: AndresGuzman
+      - id: servicio-item
+        uri: lb://servicio-item
+        predicates:
+          - Path=/api/items/**
+        filters:
+          - StripPrefix=2 
+          - AddRequestHeader=token-request, 123456
+          - AddResponseHeader=token-response, 12345678
+          - SetResponseHeader=Content-Type, text/plain
+          - AddRequestParameter=nombre, andres
